@@ -22,20 +22,22 @@ export default function Navbar() {
     <header className="sticky top-0 z-50 border-b border-zinc-200 bg-white/90 backdrop-blur dark:border-zinc-800 dark:bg-zinc-950/90">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
 
-        <Link href="/">
-          <div className="flex h-10 w-10 items-center justify-center rounded-[10px] bg-black text-xl font-bold tracking-tight text-white dark:bg-white dark:text-black">
-            <span className="text-xl font-semibold leading-5 text-white dark:text-black">
-              LG
-            </span>
-          </div>
-        </Link>
+        <div className="flex items-center gap-3">
+            <Link href="/">
+            <div className="flex h-10 w-10 items-center justify-center rounded-[10px] bg-black text-xl font-bold tracking-tight text-white dark:bg-white dark:text-black">
+                <span className="text-xl font-semibold leading-5 text-white dark:text-black">
+                LS
+                </span>
+            </div>
+            </Link>
 
-        <Link
-          href="/"
-          className="text-xl font-bold tracking-tight text-zinc-900 dark:text-white"
-        >
-          Lahiru Sanjana
-        </Link>
+            <Link
+            href="/"
+            className="text-xl font-bold tracking-tight text-zinc-900 dark:text-white"
+            >
+            Lahiru Sanjana
+            </Link>
+        </div>
 
         {/* Desktop nav */}
         <nav className="hidden items-center gap-6 md:flex">
@@ -43,7 +45,7 @@ export default function Navbar() {
             <Link
               key={href}
               href={href}
-              className={`text-sm font-medium transition-colors hover:text-indigo-600 dark:hover:text-indigo-400 ${
+              className={`text-md font-medium transition-colors hover:text-indigo-600 dark:hover:text-indigo-400 ${
                 pathname === href
                   ? "text-indigo-600 dark:text-indigo-400"
                   : "text-zinc-600 dark:text-zinc-400"
@@ -109,23 +111,59 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       {menuOpen && (
-        <nav className="border-t border-zinc-100 px-6 pb-4 dark:border-zinc-800 md:hidden">
-          {navLinks.map(({ href, label }) => (
-            <Link
-              key={href}
-              href={href}
-              onClick={() => setMenuOpen(false)}
-              className={`block py-2 text-sm font-medium transition-colors hover:text-indigo-600 dark:hover:text-indigo-400 ${
-                pathname === href
-                  ? "text-indigo-600 dark:text-indigo-400"
-                  : "text-zinc-600 dark:text-zinc-400"
-              }`}
-            >
-              {label}
-            </Link>
-          ))}
-        </nav>
-      )}
+        <div
+  className={`overflow-hidden transition-all duration-300 ease-in-out md:hidden ${
+    menuOpen ? "max-h-[100vh] opacity-100" : "max-h-0 opacity-0"
+  }`}
+>
+  <nav className="min-h-[calc(100vh-72px)] border-t border-zinc-200/40 bg-white/40 px-6 py-6 backdrop-blur-xl backdrop-saturate-150 shadow-lg shadow-black/5 dark:border-zinc-800/40 dark:bg-zinc-950/40 dark:shadow-black/20">
+    <div className="flex min-h-[calc(100vh-120px)] flex-col justify-between">
+      <div className="flex flex-col items-end gap-3">
+        {navLinks.map(({ href, label }) => (
+          <Link
+            key={href}
+            href={href}
+            onClick={() => setMenuOpen(false)}
+            className={`min-w-[160px] rounded-2xl px-4 py-3 text-right text-base font-medium transition-all duration-200 backdrop-blur-sm ${
+              pathname === href
+                ? "bg-white/70 text-zinc-900 shadow-sm ring-1 ring-zinc-200/60 dark:bg-zinc-800/70 dark:text-white dark:ring-zinc-700/60"
+                : "text-zinc-600 hover:bg-white/50 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800/50 dark:hover:text-white"
+            }`}
+          >
+            {label}
+          </Link>
+        ))}
+      </div>
+
+      <div className="mt-10 border-t border-zinc-800/40 pt-6 text-right dark:border-zinc-800/40">
+        <p className="text-sm font-medium text-zinc-800 dark:text-zinc-400">
+          Lahiru Sanjana
+        </p>
+        <p className="mt-1 text-xs text-zinc-800 dark:text-zinc-500">
+          Software Engineer · Portfolio
+        </p>
+
+        <div className="mt-4 flex justify-end gap-3">
+          <Link
+            href="https://github.com/snowcodie"
+            className="rounded-full border border-zinc-800/50 bg-white/40 px-3 py-2 text-xs text-zinc-900 transition hover:bg-white/70 hover:text-zinc-900 dark:border-zinc-700/50 dark:bg-zinc-900/40 dark:text-zinc-300 dark:hover:bg-zinc-800/70 dark:hover:text-white"
+          >
+            GitHub
+          </Link>
+          <Link
+            href="https://www.linkedin.com/in/snowcodie/"
+            className="rounded-full border border-zinc-800/50 bg-white/40 px-3 py-2 text-xs text-zinc-900 transition hover:bg-white/70 hover:text-zinc-900 dark:border-zinc-700/50 dark:bg-zinc-900/40 dark:text-zinc-300 dark:hover:bg-zinc-800/70 dark:hover:text-white"
+          >
+            LinkedIn
+          </Link>
+        </div>
+      </div>
+    </div>
+  </nav>
+</div>
+
+        )}
+
     </header>
   );
 }
