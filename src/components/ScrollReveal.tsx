@@ -10,11 +10,15 @@ import {
 
 type ScrollRevealProps = HTMLAttributes<HTMLDivElement> & {
   children: ReactNode;
+  variant?: "up" | "left" | "right" | "zoom" | "soft";
+  threshold?: number;
 };
 
 export default function ScrollReveal({
   children,
   className = "",
+  variant = "up",
+  threshold = 0.28,
   ...props
 }: ScrollRevealProps) {
   const [isVisible, setIsVisible] = useState(false);
@@ -32,7 +36,7 @@ export default function ScrollReveal({
         setIsVisible(Boolean(entry?.isIntersecting));
       },
       {
-        threshold: 0.35,
+        threshold,
         rootMargin: "0px 0px -10% 0px",
       }
     );
@@ -42,12 +46,12 @@ export default function ScrollReveal({
     return () => {
       observer.disconnect();
     };
-  }, []);
+  }, [threshold]);
 
   return (
     <div
       ref={elementRef}
-      className={`scroll-reveal${isVisible ? " is-visible" : ""}${className ? ` ${className}` : ""}`}
+      className={`scroll-reveal scroll-reveal-${variant}${isVisible ? " is-visible" : ""}${className ? ` ${className}` : ""}`}
       {...props}
     >
       {children}

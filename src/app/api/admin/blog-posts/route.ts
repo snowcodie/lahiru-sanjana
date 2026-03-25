@@ -1,20 +1,23 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/db";
 import { isAdminAuthorized } from "@/lib/auth";
-import { ProjectSchema } from "@/lib/validation";
+import { prisma } from "@/lib/db";
+import { BlogPostSchema } from "@/lib/validation";
 
-// GET /api/admin/projects — list ALL projects (including unpublished)
 export async function GET(request: NextRequest) {
   if (!(await isAdminAuthorized(request))) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-  const projects = await prisma.project.findMany({
-    orderBy: { createdAt: "desc" },
+
+  const posts = await prisma.blogPost.findMany({
+    orderBy: [
+      { publishedAt: "desc" },
+      { createdAt: "desc" },
+    ],
   });
-  return NextResponse.json({ data: projects }, { status: 200 });
+
+  return NextResponse.json({ data: posts }, { status: 200 });
 }
 
-// POST /api/admin/projects — create a new project
 export async function POST(request: NextRequest) {
   if (!(await isAdminAuthorized(request))) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -27,17 +30,23 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
 
-  const parseResult = ProjectSchema.safeParse(body);
-  if (!parseResult.success) {
+  const parsed = BlogPostSchema.safeParse(body);
+  if (!parsed.success) {
     return NextResponse.json(
-      { error: "Validation failed", details: parseResult.error.flatten().fieldErrors },
+      { error: "Validation failed", details: parsed.error.flatten().fieldErrors },
       { status: 400 }
     );
   }
 
   try {
-    const project = await prisma.project.create({ data: parseResult.data });
-    return NextResponse.json({ data: project }, { status: 201 });
+    const post = await prisma.blogPost.create({
+      data: {
+        ...parsed.data,
+        publishedAt: parsed.data.published ? new Date() : null,
+      },
+    });
+
+    return NextResponse.json({ data: post }, { status: 201 });
   } catch (err: unknown) {
     if (
       typeof err === "object" &&
@@ -46,10 +55,11 @@ export async function POST(request: NextRequest) {
       (err as { code: string }).code === "P2002"
     ) {
       return NextResponse.json(
-        { error: "A project with that slug already exists" },
+        { error: "A blog post with that slug already exists" },
         { status: 409 }
       );
     }
-    return NextResponse.json({ error: "Failed to create project" }, { status: 500 });
+
+    return NextResponse.json({ error: "Failed to create blog post" }, { status: 500 });
   }
 }

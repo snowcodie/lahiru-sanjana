@@ -20,6 +20,48 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Admin Panel
+
+This project now includes a simple admin panel at `/admin` with:
+
+- Contact form inbox review
+- Project create, update, and delete
+- Blog post create, update, and delete
+- Email OTP login for admin access
+
+### Required environment variables
+
+Add these to your `.env` file:
+
+```env
+DATABASE_URL="postgresql://..."
+ADMIN_EMAIL="you@example.com"
+ADMIN_SECRET_KEY="long-random-secret-for-api-fallback"
+
+SMTP_HOST="smtp.example.com"
+SMTP_PORT="587"
+SMTP_USER="smtp-user"
+SMTP_PASS="smtp-password"
+SMTP_FROM="Portfolio Admin <no-reply@example.com>"
+```
+
+Notes:
+
+- `ADMIN_EMAIL` is the only email allowed to request an OTP.
+- `ADMIN_SECRET_KEY` is still supported as a bearer token for admin API access.
+- In development, if SMTP settings are missing, OTP codes are logged to the server console instead of being emailed.
+
+### Database setup
+
+After pulling the latest changes, run:
+
+```bash
+npm run db:generate
+npm run db:migrate
+```
+
+This creates the blog and admin auth tables used by the dashboard.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

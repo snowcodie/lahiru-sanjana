@@ -72,9 +72,37 @@
     filter 850ms ease;
 }
 
+.scroll-reveal.scroll-reveal-left {
+  transform: translate3d(-54px, 18px, 0);
+  filter: blur(10px);
+}
+
+.scroll-reveal.scroll-reveal-right {
+  transform: translate3d(54px, 18px, 0);
+  filter: blur(10px);
+}
+
+.scroll-reveal.scroll-reveal-zoom {
+  transform: scale(0.94) translateY(26px);
+  filter: blur(8px);
+}
+
+.scroll-reveal.scroll-reveal-soft {
+  transform: translateY(18px);
+  filter: blur(6px);
+}
+
 .scroll-reveal.is-visible {
   opacity: 1;
   transform: translateY(0);
+  filter: blur(0);
+}
+
+.scroll-reveal.scroll-reveal-left.is-visible,
+.scroll-reveal.scroll-reveal-right.is-visible,
+.scroll-reveal.scroll-reveal-zoom.is-visible,
+.scroll-reveal.scroll-reveal-soft.is-visible {
+  transform: translate3d(0, 0, 0) scale(1);
   filter: blur(0);
 }
 
@@ -157,4 +185,27 @@ body {
      bg-zinc-50 dark:bg-zinc-950 / text-zinc-900 dark:text-zinc-100
      Removing the var() overrides here so they don't conflict. */
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Career page — page-turn reveal from the timeline spine */
+.career-card-reveal {
+  opacity: 0;
+  transform: perspective(1000px) rotateY(-28deg) translateX(-10px);
+  transform-origin: left center;
+  transition:
+    opacity 1s ease,
+    transform 1s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.career-card-reveal.career-card-visible {
+  opacity: 1;
+  transform: perspective(1000px) rotateY(0deg) translateX(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .career-card-reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
 }

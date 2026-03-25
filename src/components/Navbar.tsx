@@ -4,19 +4,26 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { useTheme } from "@/components/ThemeProvider";
+import { useLanguage } from "@/components/LanguageProvider";
+import { localeLabels, Locale, supportedLocales } from "@/lib/i18n";
 
 const navLinks = [
-  { href: "/", label: "Home" },
-  { href: "/projects", label: "Projects" },
-  { href: "/career", label: "Career" },
-  { href: "/blog", label: "Blog" },
-  { href: "/contact", label: "Contact" },
+  { href: "/", labelKey: "nav.home" },
+  { href: "/projects", labelKey: "nav.projects" },
+  { href: "/career", labelKey: "nav.career" },
+  { href: "/blog", labelKey: "nav.blog" },
+  { href: "/contact", labelKey: "nav.contact" },
 ];
 
 export default function Navbar() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();
+  const { locale, setLocale, t } = useLanguage();
+
+  const handleLocaleChange = (value: string) => {
+    setLocale(value as Locale);
+  };
 
   return (
     <header className="sticky top-0 z-50 border-b border-zinc-200 bg-white/90 backdrop-blur dark:border-zinc-800 dark:bg-zinc-950/90">
@@ -41,7 +48,7 @@ export default function Navbar() {
 
         {/* Desktop nav */}
         <nav className="hidden items-center gap-6 md:flex">
-          {navLinks.map(({ href, label }) => (
+          {navLinks.map(({ href, labelKey }) => (
             <Link
               key={href}
               href={href}
@@ -51,9 +58,38 @@ export default function Navbar() {
                   : "text-zinc-600 dark:text-zinc-400"
               }`}
             >
-              {label}
+              {t(labelKey)}
             </Link>
           ))}
+          <label className="sr-only" htmlFor="desktop-language-select">
+            {t("nav.languageLabel")}
+          </label>
+          <div className="relative">
+            <select
+              id="desktop-language-select"
+              value={locale}
+              onChange={(event) => handleLocaleChange(event.target.value)}
+              className="appearance-none rounded-full border border-zinc-300 bg-white py-1 pl-3 pr-8 text-xs font-medium text-zinc-700 outline-none transition hover:border-zinc-400 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300"
+            >
+              {supportedLocales.map((item) => (
+                <option key={item} value={item}>
+                  {localeLabels[item]}
+                </option>
+              ))}
+            </select>
+            <svg
+              className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 h-3 w-3 text-zinc-500 dark:text-zinc-400"
+              viewBox="0 0 12 12"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <path d="m3 4.5 3 3 3-3" />
+            </svg>
+          </div>
           <button
             aria-label="Toggle theme"
             onClick={toggleTheme}
@@ -74,6 +110,35 @@ export default function Navbar() {
         </nav>
 
         <div className="flex items-center gap-2 md:hidden">
+          <label className="sr-only" htmlFor="mobile-language-select">
+            {t("nav.languageLabel")}
+          </label>
+          <div className="relative">
+            <select
+              id="mobile-language-select"
+              value={locale}
+              onChange={(event) => handleLocaleChange(event.target.value)}
+              className="appearance-none rounded-full border border-zinc-300 bg-white py-1 pl-2.5 pr-7 text-[11px] font-medium text-zinc-700 outline-none transition hover:border-zinc-400 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300"
+            >
+              {supportedLocales.map((item) => (
+                <option key={item} value={item}>
+                  {item.toUpperCase()}
+                </option>
+              ))}
+            </select>
+            <svg
+              className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 h-2.5 w-2.5 text-zinc-500 dark:text-zinc-400"
+              viewBox="0 0 12 12"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <path d="m3 4.5 3 3 3-3" />
+            </svg>
+          </div>
           {/* Mobile theme toggle */}
           <button
             aria-label="Toggle theme"
@@ -119,7 +184,7 @@ export default function Navbar() {
   <nav className="min-h-[calc(100vh-72px)] border-t border-zinc-200/40 bg-white/40 px-6 py-6 backdrop-blur-xl backdrop-saturate-150 shadow-lg shadow-black/5 dark:border-zinc-800/40 dark:bg-zinc-950/40 dark:shadow-black/20">
     <div className="flex min-h-[calc(100vh-120px)] flex-col justify-between">
       <div className="flex flex-col items-end gap-3">
-        {navLinks.map(({ href, label }) => (
+        {navLinks.map(({ href, labelKey }) => (
           <Link
             key={href}
             href={href}
@@ -130,7 +195,7 @@ export default function Navbar() {
                 : "text-zinc-600 hover:bg-white/50 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800/50 dark:hover:text-white"
             }`}
           >
-            {label}
+            {t(labelKey)}
           </Link>
         ))}
       </div>
@@ -140,7 +205,7 @@ export default function Navbar() {
           Lahiru Sanjana
         </p>
         <p className="mt-1 text-xs text-zinc-800 dark:text-zinc-500">
-          Software Engineer · Portfolio
+          {t("nav.brandSubtitle")}
         </p>
 
         <div className="mt-4 flex justify-end gap-3">

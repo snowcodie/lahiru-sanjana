@@ -7,7 +7,7 @@ type Context = { params: Promise<{ id: string }> };
 
 // PUT /api/admin/projects/[id] — update a project
 export async function PUT(request: NextRequest, { params }: Context) {
-  if (!isAdminAuthorized(request)) {
+  if (!(await isAdminAuthorized(request))) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -48,7 +48,7 @@ export async function PUT(request: NextRequest, { params }: Context) {
 
 // DELETE /api/admin/projects/[id] — delete a project
 export async function DELETE(request: NextRequest, { params }: Context) {
-  if (!isAdminAuthorized(request)) {
+  if (!(await isAdminAuthorized(request))) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
