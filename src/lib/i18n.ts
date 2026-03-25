@@ -119,6 +119,13 @@ type TranslationSchema = {
     subtitle: string;
     emptyState: string;
   };
+  blogPage: {
+    badge: string;
+    heading: string;
+    subtitle: string;
+    emptyState: string;
+    readArticle: string;
+  };
 };
 
 export const translations: Record<Locale, TranslationSchema> = {
@@ -245,6 +252,13 @@ export const translations: Record<Locale, TranslationSchema> = {
         "My professional journey - roles, companies, and what I worked on.",
       emptyState: "No career entries yet.",
     },
+    blogPage: {
+      badge: "Blog",
+      heading: "Notes on engineering, SAP, and product building",
+      subtitle: "Published writing from the admin panel appears here automatically.",
+      emptyState: "No blog posts published yet.",
+      readArticle: "Read article",
+    },
   },
   fr: {
     nav: {
@@ -369,6 +383,13 @@ export const translations: Record<Locale, TranslationSchema> = {
         "Mon parcours professionnel - roles, entreprises et contributions.",
       emptyState: "Aucune experience pour le moment.",
     },
+    blogPage: {
+      badge: "Blog",
+      heading: "Notes sur l'ingenierie, SAP et le developpement produit",
+      subtitle: "Les articles publies depuis le panneau d'administration apparaissent ici automatiquement.",
+      emptyState: "Aucun article publie pour le moment.",
+      readArticle: "Lire l'article",
+    },
   },
   es: {
     nav: {
@@ -492,6 +513,13 @@ export const translations: Record<Locale, TranslationSchema> = {
       subtitle:
         "Mi recorrido profesional - roles, empresas y en lo que he trabajado.",
       emptyState: "Aun no hay entradas de carrera.",
+    },
+    blogPage: {
+      badge: "Blog",
+      heading: "Notas sobre ingenieria, SAP y desarrollo de productos",
+      subtitle: "Los articulos publicados desde el panel de administracion aparecen aqui automaticamente.",
+      emptyState: "Aun no hay articulos publicados.",
+      readArticle: "Leer articulo",
     },
   },
   ru: {
@@ -618,6 +646,13 @@ export const translations: Record<Locale, TranslationSchema> = {
         "Мой профессиональный путь - роли, компании и выполненная работа.",
       emptyState: "Пока нет записей о карьере.",
     },
+    blogPage: {
+      badge: "Блог",
+      heading: "Заметки об инженерии, SAP и разработке продуктов",
+      subtitle: "Статьи, опубликованные через панель администратора, появляются здесь автоматически.",
+      emptyState: "Пока нет опубликованных статей.",
+      readArticle: "Читать статью",
+    },
   },
   de: {
     nav: {
@@ -741,6 +776,13 @@ export const translations: Record<Locale, TranslationSchema> = {
       subtitle:
         "Mein beruflicher Werdegang – Rollen, Unternehmen und meine Tätigkeiten.",
       emptyState: "Noch keine Karriereeinträge vorhanden.",
+    },
+    blogPage: {
+      badge: "Blog",
+      heading: "Notizen zu Technik, SAP und Produktentwicklung",
+      subtitle: "Über das Admin-Panel veröffentlichte Beiträge erscheinen hier automatisch.",
+      emptyState: "Noch keine Blogbeiträge veröffentlicht.",
+      readArticle: "Artikel lesen",
     },
   },
 };
