@@ -46,9 +46,10 @@ export default async function BlogPostPage({ params }: Props) {
           {post.excerpt}
         </p>
       ) : null}
-      <div className="mt-10 whitespace-pre-wrap text-base leading-8 text-zinc-700 dark:text-zinc-300">
-        {post.content}
-      </div>
+      <div
+        className="prose-content mt-10"
+        dangerouslySetInnerHTML={{ __html: post.content }}
+      />
     </article>
   );
 }

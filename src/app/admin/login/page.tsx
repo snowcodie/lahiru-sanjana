@@ -1,10 +1,10 @@
 import { redirect } from "next/navigation";
 import AdminLoginForm from "@/components/AdminLoginForm";
-import { getAdminEmail, getAdminSessionFromCookies } from "@/lib/auth";
+import { getAdminSessionFromCookies } from "@/lib/auth";
 
 export const metadata = {
   title: "Admin Login",
-  description: "Secure admin login with email OTP.",
+  description: "Secure admin login.",
 };
 
 export default async function AdminLoginPage() {
@@ -23,12 +23,10 @@ export default async function AdminLoginPage() {
           <h1 className="text-4xl font-semibold tracking-tight text-zinc-900 dark:text-white sm:text-5xl">
             Manage projects, blog posts, and contact inbox in one place.
           </h1>
-          <p className="mt-5 text-base leading-7 text-zinc-600 dark:text-zinc-400">
-            Access is protected with a one-time password sent to your admin email. After login, you can publish projects, write blog posts, and review new messages.
-          </p>
+          
         </div>
 
-        <AdminLoginForm defaultEmail={getAdminEmail()} />
+        <AdminLoginForm />
       </div>
     </div>
   );

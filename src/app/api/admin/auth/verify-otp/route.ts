@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const session = await verifyAdminOtp(parsed.data.email, parsed.data.code);
+  const session = await verifyAdminOtp(parsed.data.identifier, parsed.data.code);
 
   if (!session) {
     return NextResponse.json({ error: "Invalid or expired OTP." }, { status: 401 });

@@ -80,6 +80,8 @@ export default function ProjectCard({
           {codeUrl && (
             <Link
               href={codeUrl}
+              target="_blank"
+              rel="noopener noreferrer"
               onClick={(event) => event.stopPropagation()}
               className="inline-flex items-center gap-2 text-sm font-normal leading-5 text-zinc-600 transition hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
             >
@@ -104,6 +106,8 @@ export default function ProjectCard({
           {liveUrl && (
             <Link
               href={liveUrl}
+              target="_blank"
+              rel="noopener noreferrer"
               onClick={(event) => event.stopPropagation()}
               className="inline-flex items-center gap-2 text-sm font-normal leading-5 text-zinc-600 transition hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
             >

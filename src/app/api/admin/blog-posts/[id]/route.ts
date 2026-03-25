@@ -6,6 +6,25 @@ import { BlogPostSchema } from "@/lib/validation";
 
 type Context = { params: Promise<{ id: string }> };
 
+export async function GET(request: NextRequest, { params }: Context) {
+  if (!(await isAdminAuthorized(request))) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const { id } = await params;
+  const postId = parseInt(id, 10);
+  if (Number.isNaN(postId)) {
+    return NextResponse.json({ error: "Invalid blog post ID" }, { status: 400 });
+  }
+
+  const post = await prisma.blogPost.findUnique({ where: { id: postId } });
+  if (!post) {
+    return NextResponse.json({ error: "Blog post not found" }, { status: 404 });
+  }
+
+  return NextResponse.json({ data: post });
+}
+
 export async function PUT(request: NextRequest, { params }: Context) {
   if (!(await isAdminAuthorized(request))) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

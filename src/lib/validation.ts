@@ -40,12 +40,18 @@ export const BlogPostSchema = z.object({
   published: z.boolean().default(false),
 });
 
+export const AdminLoginSchema = z.object({
+  identifier: z.string().min(1, "Username or email is required"),
+  password: z.string().min(1, "Password is required"),
+});
+
 export const AdminOtpRequestSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
 });
 
 export const AdminOtpVerifySchema = z.object({
-  email: z.string().email("Please enter a valid email address"),
+  // identifier may be a plain username, not necessarily an email
+  identifier: z.string().min(1, "Identifier is required"),
   code: z.string().regex(/^\d{6}$/, "OTP must be a 6-digit code"),
 });
 
@@ -67,5 +73,6 @@ export type ContactFormInput = z.infer<typeof ContactFormSchema>;
 export type ProjectInput = z.infer<typeof ProjectSchema>;
 export type BlogPostInput = z.infer<typeof BlogPostSchema>;
 export type ExperienceInput = z.infer<typeof ExperienceSchema>;
+export type AdminLoginInput = z.infer<typeof AdminLoginSchema>;
 export type AdminOtpRequestInput = z.infer<typeof AdminOtpRequestSchema>;
 export type AdminOtpVerifyInput = z.infer<typeof AdminOtpVerifySchema>;

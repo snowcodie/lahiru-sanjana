@@ -1,4 +1,5 @@
 import crypto from "node:crypto";
+import bcrypt from "bcryptjs";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { NextRequest } from "next/server";
@@ -14,11 +15,39 @@ export function getAdminEmail() {
   return process.env.ADMIN_EMAIL?.trim().toLowerCase() ?? "";
 }
 
-export async function requestAdminOtp(email: string) {
-  const normalizedEmail = email.trim().toLowerCase();
+/** Returns true when OTP is required after a successful password login. */
+export function isOtpEnabled() {
+  return process.env.ENABLE_OTP?.trim().toLowerCase() === "true";
+}
+
+/**
+ * Verify the submitted identifier + password against the ADMIN_EMAIL and
+ * ADMIN_PASSWORD_HASH env vars. Returns true on success.
+ */
+export async function verifyAdminPassword(
+  identifier: string,
+  password: string
+): Promise<boolean> {
+  const adminIdentifier = getAdminEmail();
+  const passwordHash = (process.env.ADMIN_PASSWORD_HASH?.trim() ?? "").replace(/^['"]|['"]$/g, "");
+
+  if (!adminIdentifier || !passwordHash) {
+    return false;
+  }
+
+  const identifierMatches = identifier.trim().toLowerCase() === adminIdentifier;
+  if (!identifierMatches) {
+    return false;
+  }
+
+  return bcrypt.compare(password, passwordHash);
+}
+
+export async function requestAdminOtp(identifier: string) {
+  const normalizedIdentifier = identifier.trim().toLowerCase();
   const adminEmail = getAdminEmail();
 
-  if (!adminEmail || normalizedEmail !== adminEmail) {
+  if (!adminEmail || normalizedIdentifier !== adminEmail) {
     return { success: true };
   }
 
@@ -27,7 +56,7 @@ export async function requestAdminOtp(email: string) {
 
   await prisma.adminOtpCode.updateMany({
     where: {
-      email: normalizedEmail,
+      email: normalizedIdentifier,
       consumedAt: null,
     },
     data: {
@@ -37,14 +66,14 @@ export async function requestAdminOtp(email: string) {
 
   await prisma.adminOtpCode.create({
     data: {
-      email: normalizedEmail,
+      email: normalizedIdentifier,
       codeHash: hashValue(code),
       expiresAt,
     },
   });
 
   await sendAdminOtpEmail({
-    email: normalizedEmail,
+    email: normalizedIdentifier,
     code,
     expiresAt,
   });
@@ -52,17 +81,17 @@ export async function requestAdminOtp(email: string) {
   return { success: true };
 }
 
-export async function verifyAdminOtp(email: string, code: string) {
-  const normalizedEmail = email.trim().toLowerCase();
+export async function verifyAdminOtp(identifier: string, code: string) {
+  const normalizedIdentifier = identifier.trim().toLowerCase();
   const adminEmail = getAdminEmail();
 
-  if (!adminEmail || normalizedEmail !== adminEmail) {
+  if (!adminEmail || normalizedIdentifier !== adminEmail) {
     return null;
   }
 
   const otp = await prisma.adminOtpCode.findFirst({
     where: {
-      email: normalizedEmail,
+      email: normalizedIdentifier,
       codeHash: hashValue(code),
       consumedAt: null,
       expiresAt: { gt: new Date() },
@@ -79,7 +108,7 @@ export async function verifyAdminOtp(email: string, code: string) {
     data: { consumedAt: new Date() },
   });
 
-  return createAdminSession(normalizedEmail);
+  return createAdminSession(normalizedIdentifier);
 }
 
 export async function createAdminSession(email: string) {

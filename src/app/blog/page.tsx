@@ -44,7 +44,7 @@ export default async function BlogPage() {
                 </Link>
               </h2>
               <p className="mt-3 text-sm leading-6 text-zinc-600 dark:text-zinc-400">
-                {post.excerpt || `${post.content.slice(0, 180)}...`}
+                {post.excerpt || `${post.content.replace(/<[^>]*>/g, "").slice(0, 180)}...`}
               </p>
               <Link href={`/blog/${post.slug}`} className="mt-5 inline-flex text-sm font-semibold text-indigo-600 transition hover:text-indigo-500 dark:text-indigo-400">
                 Read article
